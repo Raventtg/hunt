@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Treasure Hunt</title>
+</head>
+<body>
+
+<h2>Question</h2>
+<p>YOUR QUESTION HERE</p>
+
+<input id="ans" placeholder="Answer">
+<button onclick="check()">Submit</button>
+
+<div id="msg"></div>
+
+<script>
+const API = "https://script.google.com/macros/s/AKfycbwwOhhkig1m-JXJ1XFEt6socZENmHbxD6jUj6XZzqxq46_LYSoAxaQuODTrYOjHCNfWWw/exec";
+const page = "p1"; // change per page
+
+const params = new URLSearchParams(window.location.search);
+const team = params.get("team");
+
+if (!team) {
+  document.body.innerHTML = "<h1>Invalid Access</h1>";
+  throw new Error();
+}
+
+// CHECK STATUS
+fetch(`${API}?action=check&team=${team}`)
+  .then(r => r.text())
+  .then(status => {
+    if (status !== "ACTIVE") {
+      document.body.innerHTML = "<h1>❌ DISQUALIFIED</h1>";
+      throw new Error();
+    }
+  });
+
+// ANSWER CHECK
+function check() {
+  const correct = "ANSWER"; // change
+  const user = document.getElementById("ans").value.trim().toUpperCase();
+  if (user === correct) {
+    document.getElementById("msg").innerText =
+      "Correct. Go to next location.";
+  } else {
+    document.getElementById("msg").innerText = "Wrong.";
+  }
+}
+
+// DISQUALIFY ON TAB CHANGE
+document.addEventListener("visibilitychange", () => {
+  if (document.hidden) {
+    fetch(`${API}?action=disqualify&team=${team}&page=${page}`);
+    document.body.innerHTML = "<h1>❌ DISQUALIFIED</h1>";
+  }
+});
+</script>
+
+</body>
+</html>
