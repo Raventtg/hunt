@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Treasure Hunt</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin-top: 60px;
+      user-select: none;
+    }
+    .box {
+      border: 2px solid black;
+      padding: 20px;
+      width: 85%;
+      margin: auto;
+    }
+    input, button {
+      padding: 8px;
+      font-size: 16px;
+      margin-top: 10px;
+    }
+    h1 { color: red; }
+  </style>
+</head>
+
+<body>
+
+<div id="app"></div>
+
+<script>
+/* ===== CHECK DISQUALIFICATION ON LOAD ===== */
+if (localStorage.getItem("disqualified") === "true") {
+  document.getElementById("app").innerHTML = `
+    <h1>❌ DISQUALIFIED</h1>
+    <p>This team has violated the rules.</p>
+  `;
+  throw new Error("Disqualified");
+}
+
+/* ===== MAIN CONTENT ===== */
+document.getElementById("app").innerHTML = `
+  <div class="box">
+    <h2>Question</h2>
+
+    <!-- ✏️ CHANGE QUESTION HERE -->
+    <p>
+      Vehicles enter and leave this area from the same side.  
+      Which basic rule decides who leaves first?
+    </p>
+
+    <input type="text" id="ans" placeholder="Enter answer">
+    <br>
+    <button onclick="check()">Submit</button>
+
+    <div id="msg"></div>
+  </div>
+`;
+
+/* ===== ANSWER CHECK ===== */
+function check() {
+  let user = document.getElementById("ans").value.trim().toUpperCase();
+  let correct = "STACK"; // ✏️ CHANGE ANSWER
+
+  if (user === correct) {
+    document.getElementById("msg").innerHTML =
+      "✅ Correct. Proceed to the next location and scan the QR there.";
+  } else {
+    document.getElementById("msg").innerHTML =
+      "❌ Wrong answer.";
+  }
+}
+
+/* ===== BLOCK COPY ===== */
+document.addEventListener('contextmenu', e => e.preventDefault());
+document.addEventListener('selectstart', e => e.preventDefault());
+document.addEventListener('copy', e => e.preventDefault());
+document.addEventListener('keydown', e => {
+  if (e.ctrlKey) e.preventDefault();
+});
+
+/* ===== PERMANENT DISQUALIFY ON LEAVE ===== */
+document.addEventListener("visibilitychange", () => {
+  if (document.hidden) {
+    localStorage.setItem("disqualified", "true");
+    document.body.innerHTML = `
+      <h1>❌ DISQUALIFIED</h1>
+      <p>You left the question page.</p>
+    `;
+    throw new Error("Disqualified");
+  }
+});
+
+/* ===== OPTIONAL TIME LIMIT ===== */
+setTimeout(() => {
+  localStorage.setItem("disqualified", "true");
+  document.body.innerHTML = `
+    <h1>⏱️ DISQUALIFIED</h1>
+    <p>Time limit exceeded.</p>
+  `;
+  throw new Error("Time over");
+}, 30000);
+</script>
+
+</body>
+</html>
