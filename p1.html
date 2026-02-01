@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Treasure Hunt</title>
+  <style>
+    body {
+      font-family: Arial;
+      text-align: center;
+      margin-top: 60px;
+    }
+    .box {
+      border: 2px solid black;
+      padding: 20px;
+      width: 80%;
+      margin: auto;
+    }
+    input {
+      padding: 8px;
+      font-size: 16px;
+    }
+    button {
+      padding: 8px 16px;
+      font-size: 16px;
+    }
+    #msg {
+      margin-top: 15px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="box">
+  <h2>Question</h2>
+  <p>
+    Numbers written on the board are:<br>
+    <b>12, 18, 14, 20, 16</b><br><br>
+    Without writing anything, find the number in the middle.
+  </p>
+
+  <input type="text" id="ans" placeholder="Enter answer">
+  <br><br>
+  <button onclick="check()">Submit</button>
+
+  <div id="msg"></div>
+</div>
+
+<script>
+function check() {
+  let user = document.getElementById("ans").value.trim();
+  let correct = "16";
+
+  if (user === correct) {
+    document.getElementById("msg").innerHTML =
+      "✅ Correct! Go to the next location and scan the QR there.";
+  } else {
+    document.getElementById("msg").innerHTML =
+      "❌ Wrong answer. Try again.";
+  }
+}
+</script>
+
+</body>
+</html>
